@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 use App\Core\View;
 ?>
 <?php if (empty($items)): ?>
     <tr>
-        <td colspan="5" class="text-center text-muted">Aucun TacosPlace trouvé.</td>
+        <td colspan="5" class="text-center text-muted">Aucun TacosPlace trouve.</td>
     </tr>
 <?php else: ?>
     <?php foreach ($items as $item): ?>

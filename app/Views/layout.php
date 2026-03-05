@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 use App\Core\View;
 use App\Core\Auth;
 
@@ -11,25 +11,32 @@ $flashError = View::flash('flash_error');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= View::e($title ?? 'TacoMap France Admin') ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
+<body class="tm-body">
     <a class="skip-link" href="#main">Skip to content</a>
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+
+    <nav class="navbar navbar-expand-lg tm-navbar">
         <div class="container">
-            <a class="navbar-brand" href="/admin/tacos-places">TacoMap France</a>
+            <a class="navbar-brand tm-brand" href="/admin/tacos-places">
+                <span class="tm-brand-dot"></span>
+                TacoMap France
+            </a>
             <div class="d-flex align-items-center gap-2">
                 <?php if (Auth::check()): ?>
-                    <a class="btn btn-light btn-sm" href="/admin/tacos-places">Administration</a>
-                    <span class="text-white small"><?= View::e(Auth::user()['email'] ?? '') ?></span>
+                    <a class="btn btn-sm btn-primary" href="/admin/tacos-places">Back office</a>
+                    <span class="tm-user-chip"><?= View::e(Auth::user()['email'] ?? '') ?></span>
                     <form action="/logout" method="post" class="m-0">
                         <?= View::csrfField() ?>
-                        <button type="submit" class="btn btn-outline-light btn-sm">Déconnexion</button>
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">Deconnexion</button>
                     </form>
                 <?php else: ?>
-                    <a class="btn btn-outline-light btn-sm" href="/login">Connexion</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="/login">Connexion</a>
                 <?php endif; ?>
             </div>
         </div>

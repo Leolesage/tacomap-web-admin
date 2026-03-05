@@ -1,15 +1,23 @@
-<?php
+﻿<?php
 use App\Core\View;
 ?>
-<div class="row justify-content-center">
-    <div class="col-12 col-md-6 col-lg-5">
-        <h1 class="mb-4">Connexion Admin</h1>
+<div class="tm-auth-shell">
+    <section class="tm-auth-card" aria-labelledby="auth-title">
+        <div class="tm-auth-head">
+            <div class="tm-auth-icon" aria-hidden="true">TM</div>
+            <div>
+                <h1 id="auth-title" class="m-0">Connexion admin</h1>
+                <p class="text-muted m-0">Acces securise au back office TacoMap</p>
+            </div>
+        </div>
+
         <?php if (!empty($error)): ?>
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger mt-3" role="alert">
                 <?= View::e($error) ?>
             </div>
         <?php endif; ?>
-        <form method="post" action="/login" novalidate>
+
+        <form method="post" action="/login" novalidate class="mt-3">
             <?= View::csrfField() ?>
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -23,8 +31,8 @@ use App\Core\View;
                     autocomplete="username"
                 >
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+            <div class="mb-4">
+                <label for="password" class="form-label">Mot de passe</label>
                 <input
                     type="password"
                     id="password"
@@ -36,5 +44,5 @@ use App\Core\View;
             </div>
             <button type="submit" class="btn btn-primary w-100">Se connecter</button>
         </form>
-    </div>
+    </section>
 </div>
