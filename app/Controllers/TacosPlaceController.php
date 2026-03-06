@@ -28,40 +28,41 @@ final class TacosPlaceController
         if (Auth::check()) {
             Response::redirect('/admin/tacos-places');
         }
-        Response::redirect('/login');
+        Response::redirect('/tacos-places');
+    }
+
+    public function publicIndex(Request $request): void
+    {
+        $q = trim((string)$request->queryParam('q', ''));
+        $page = max(1, (int)$request->queryParam('page', 1));
+        $this->renderIndexPage($page, $q, false);
+    }
+
+    public function publicSearch(Request $request): void
+    {
+        $q = trim((string)$request->queryParam('q', ''));
+        $page = max(1, (int)$request->queryParam('page', 1));
+        $this->renderSearchResults($page, $q, false);
+    }
+
+    public function publicShow(Request $request): void
+    {
+        $id = (int)$request->param('id');
+        $this->renderShowPage($id, false);
     }
 
     public function index(Request $request): void
     {
         $q = trim((string)$request->queryParam('q', ''));
         $page = max(1, (int)$request->queryParam('page', 1));
-        $result = $this->fetchList($page, $q);
-
-        if (!$result['ok']) {
-            View::setFlash('flash_error', (string)$result['error']);
-        }
-
-        $html = View::render('tacos_places/index', [
-            'title' => 'Tacos Places',
-            'items' => $result['items'],
-            'pagination' => $result['pagination'],
-            'q' => $q,
-        ]);
-        Response::html($html);
+        $this->renderIndexPage($page, $q, true);
     }
 
     public function search(Request $request): void
     {
         $q = trim((string)$request->queryParam('q', ''));
         $page = max(1, (int)$request->queryParam('page', 1));
-        $result = $this->fetchList($page, $q);
-
-        $html = View::render('tacos_places/_results', [
-            'items' => $result['items'],
-            'pagination' => $result['pagination'],
-            'q' => $q,
-        ], false);
-        Response::html($html);
+        $this->renderSearchResults($page, $q, true);
     }
 
     public function create(Request $request): void
@@ -112,17 +113,7 @@ final class TacosPlaceController
     public function show(Request $request): void
     {
         $id = (int)$request->param('id');
-        $res = $this->apiClient->getTacosPlace($id, Auth::token());
-        if (!$res['ok']) {
-            Response::abort(404, 'TacosPlace not found.');
-        }
-
-        $item = $res['data'] ?? [];
-        $html = View::render('tacos_places/show', [
-            'title' => 'TacosPlace Details',
-            'item' => $item,
-        ]);
-        Response::html($html);
+        $this->renderShowPage($id, true);
     }
 
     public function edit(Request $request): void
@@ -295,5 +286,92 @@ final class TacosPlaceController
             return $errors;
         }
         return ['form' => (string)($apiResponse['error'] ?? 'Erreur API')];
+    }
+
+    private function renderIndexPage(int $page, string $q, bool $isAdmin): void
+    {
+        $token = $isAdmin ? Auth::token() : '';
+        $result = $this->fetchListWithToken($page, $q, $token);
+
+        if (!$result['ok']) {
+            View::setFlash('flash_error', (string)$result['error']);
+        }
+
+        $basePath = $isAdmin ? '/admin/tacos-places' : '/tacos-places';
+        $title = $isAdmin ? 'Tacos Places Admin' : 'TacoMap France';
+        $html = View::render('tacos_places/index', [
+            'title' => $title,
+            'items' => $result['items'],
+            'pagination' => $result['pagination'],
+            'q' => $q,
+            'isAdmin' => $isAdmin,
+            'basePath' => $basePath,
+        ]);
+        Response::html($html);
+    }
+
+    private function renderSearchResults(int $page, string $q, bool $isAdmin): void
+    {
+        $token = $isAdmin ? Auth::token() : '';
+        $result = $this->fetchListWithToken($page, $q, $token);
+        $basePath = $isAdmin ? '/admin/tacos-places' : '/tacos-places';
+
+        $html = View::render('tacos_places/_results', [
+            'items' => $result['items'],
+            'pagination' => $result['pagination'],
+            'q' => $q,
+            'isAdmin' => $isAdmin,
+            'basePath' => $basePath,
+        ], false);
+        Response::html($html);
+    }
+
+    private function renderShowPage(int $id, bool $isAdmin): void
+    {
+        $token = $isAdmin ? Auth::token() : '';
+        $res = $this->apiClient->getTacosPlace($id, $token);
+        if (!$res['ok']) {
+            Response::abort(404, 'TacosPlace not found.');
+        }
+
+        $item = $res['data'] ?? [];
+        $basePath = $isAdmin ? '/admin/tacos-places' : '/tacos-places';
+        $html = View::render('tacos_places/show', [
+            'title' => 'TacosPlace Details',
+            'item' => $item,
+            'isAdmin' => $isAdmin,
+            'basePath' => $basePath,
+        ]);
+        Response::html($html);
+    }
+
+    private function fetchListWithToken(int $page, string $q, string $token): array
+    {
+        $res = $this->apiClient->listTacosPlaces($page, $this->limit, $q, $token);
+        if (!$res['ok']) {
+            return [
+                'ok' => false,
+                'error' => (string)($res['error'] ?? 'API error'),
+                'items' => [],
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $this->limit,
+                    'hasMore' => false,
+                    'total' => 0,
+                ],
+            ];
+        }
+
+        $payload = $res['data'] ?? [];
+        return [
+            'ok' => true,
+            'items' => $payload['data'] ?? [],
+            'pagination' => [
+                'page' => (int)($payload['page'] ?? $page),
+                'limit' => (int)($payload['limit'] ?? $this->limit),
+                'hasMore' => (bool)($payload['hasMore'] ?? false),
+                'total' => (int)($payload['total'] ?? 0),
+            ],
+        ];
     }
 }

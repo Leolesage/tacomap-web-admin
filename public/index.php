@@ -55,6 +55,9 @@ $router->add('POST', '/login', [$authController, 'login'], [$csrfMiddleware]);
 $router->add('POST', '/logout', [$authController, 'logout'], [$csrfMiddleware]);
 
 $router->add('GET', '/', [$tacosPlaceController, 'home']);
+$router->add('GET', '/tacos-places', [$tacosPlaceController, 'publicIndex']);
+$router->add('GET', '/tacos-places/search', [$tacosPlaceController, 'publicSearch']);
+$router->add('GET', '/tacos-places/{id}', [$tacosPlaceController, 'publicShow']);
 
 $router->add('GET', '/admin/tacos-places', [$tacosPlaceController, 'index'], [$authMiddleware]);
 $router->add('GET', '/admin/tacos-places/search', [$tacosPlaceController, 'search'], [$authMiddleware]);

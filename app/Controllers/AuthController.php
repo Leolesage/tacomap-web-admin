@@ -65,6 +65,6 @@ final class AuthController
     public function logout(Request $request): void
     {
         Auth::logout();
-        Response::redirect('/login');
+        Response::redirect('/tacos-places');
     }
 }
