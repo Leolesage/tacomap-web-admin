@@ -10,7 +10,7 @@ $flashError = View::flash('flash_error');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= View::e($title ?? 'TacoMap France Admin') ?></title>
+    <title><?= View::e($title ?? 'TacoMap France') ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
@@ -23,11 +23,12 @@ $flashError = View::flash('flash_error');
 
     <nav class="navbar navbar-expand-lg tm-navbar">
         <div class="container">
-            <a class="navbar-brand tm-brand" href="/admin/tacos-places">
+            <a class="navbar-brand tm-brand" href="/tacos-places">
                 <span class="tm-brand-dot"></span>
                 TacoMap France
             </a>
             <div class="d-flex align-items-center gap-2">
+                <a class="btn btn-sm btn-outline-secondary" href="/tacos-places">Mode user</a>
                 <?php if (Auth::check()): ?>
                     <a class="btn btn-sm btn-primary" href="/admin/tacos-places">Back office</a>
                     <span class="tm-user-chip"><?= View::e(Auth::user()['email'] ?? '') ?></span>
@@ -36,7 +37,7 @@ $flashError = View::flash('flash_error');
                         <button type="submit" class="btn btn-sm btn-outline-secondary">Deconnexion</button>
                     </form>
                 <?php else: ?>
-                    <a class="btn btn-sm btn-outline-secondary" href="/login">Connexion</a>
+                    <a class="btn btn-sm btn-primary" href="/login">Connexion admin</a>
                 <?php endif; ?>
             </div>
         </div>

@@ -1,13 +1,23 @@
 ﻿<?php
 use App\Core\View;
+
+$isAdmin = (bool)($isAdmin ?? false);
+$basePath = (string)($basePath ?? '/tacos-places');
 ?>
 <section class="tm-page-head mb-3">
     <div>
-        <p class="tm-kicker m-0">Back office</p>
+        <p class="tm-kicker m-0"><?= $isAdmin ? 'Back office' : 'Espace user' ?></p>
         <h1 class="m-0">TacosPlace</h1>
-        <p class="tm-sub m-0">Gestion complete: recherche AJAX, pagination, detail, edition et suppression.</p>
+        <p class="tm-sub m-0">
+            <?= $isAdmin
+                ? 'Gestion complete: recherche AJAX, pagination, detail, edition et suppression.'
+                : 'Consultation des lieux tacos avec recherche et pagination.'
+            ?>
+        </p>
     </div>
-    <a href="/admin/tacos-places/create" class="btn btn-primary">Creer</a>
+    <?php if ($isAdmin): ?>
+        <a href="/admin/tacos-places/create" class="btn btn-primary">Creer</a>
+    <?php endif; ?>
 </section>
 
 <section class="tm-panel mb-3">
@@ -19,7 +29,7 @@ use App\Core\View;
         placeholder="Rechercher un lieu..."
         autocomplete="off"
         value="<?= View::e($q ?? '') ?>"
-        data-search-url="/admin/tacos-places/search"
+        data-search-url="<?= View::e($basePath . '/search') ?>"
     >
 </section>
 

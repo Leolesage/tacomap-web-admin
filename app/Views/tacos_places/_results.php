@@ -8,6 +8,8 @@ $hasMore = (bool)($pagination['hasMore'] ?? false);
 $total = (int)($pagination['total'] ?? 0);
 $totalPages = max(1, (int)ceil($total / max(1, $limit)));
 $q = (string)($q ?? '');
+$isAdmin = (bool)($isAdmin ?? false);
+$basePath = (string)($basePath ?? '/tacos-places');
 ?>
 <section class="tm-panel">
     <div class="table-responsive">

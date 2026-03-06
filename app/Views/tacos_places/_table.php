@@ -1,5 +1,8 @@
 ﻿<?php
 use App\Core\View;
+
+$isAdmin = (bool)($isAdmin ?? false);
+$basePath = (string)($basePath ?? '/tacos-places');
 ?>
 <?php if (empty($items)): ?>
     <tr>
@@ -19,8 +22,10 @@ use App\Core\View;
             <td><?= View::e($item['date'] ?? '') ?></td>
             <td><?= View::e($item['price'] ?? '') ?></td>
             <td class="text-nowrap">
-                <a class="btn btn-sm btn-outline-primary" href="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>">Voir</a>
-                <a class="btn btn-sm btn-outline-secondary" href="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/edit">Modifier</a>
+                <a class="btn btn-sm btn-outline-primary" href="<?= View::e($basePath) ?>/<?= View::e($item['id'] ?? 0) ?>">Voir</a>
+                <?php if ($isAdmin): ?>
+                    <a class="btn btn-sm btn-outline-secondary" href="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/edit">Modifier</a>
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>

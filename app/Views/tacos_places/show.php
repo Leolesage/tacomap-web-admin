@@ -1,19 +1,29 @@
 ﻿<?php
 use App\Core\View;
+
+$isAdmin = (bool)($isAdmin ?? false);
+$basePath = (string)($basePath ?? '/tacos-places');
 ?>
 <section class="tm-page-head mb-3">
     <div>
         <p class="tm-kicker m-0">Detail</p>
         <h1 class="m-0">TacosPlace</h1>
-        <p class="tm-sub m-0">Fiche complete du lieu avec export PDF et carte.</p>
+        <p class="tm-sub m-0">
+            <?= $isAdmin
+                ? 'Fiche complete du lieu avec export PDF et carte.'
+                : 'Fiche complete du lieu avec carte.' ?>
+        </p>
     </div>
     <div class="d-flex gap-2 flex-wrap">
-        <a href="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/pdf" class="btn btn-outline-primary">Exporter PDF</a>
-        <a href="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/edit" class="btn btn-outline-secondary">Modifier</a>
-        <form method="post" action="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/delete" onsubmit="return confirm('Supprimer ce TacosPlace ?');">
-            <?= View::csrfField() ?>
-            <button type="submit" class="btn btn-danger">Supprimer</button>
-        </form>
+        <a href="<?= View::e($basePath) ?>" class="btn btn-outline-secondary">Retour liste</a>
+        <?php if ($isAdmin): ?>
+            <a href="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/pdf" class="btn btn-outline-primary">Exporter PDF</a>
+            <a href="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/edit" class="btn btn-outline-secondary">Modifier</a>
+            <form method="post" action="/admin/tacos-places/<?= View::e($item['id'] ?? 0) ?>/delete" onsubmit="return confirm('Supprimer ce TacosPlace ?');">
+                <?= View::csrfField() ?>
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        <?php endif; ?>
     </div>
 </section>
 
