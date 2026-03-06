@@ -25,7 +25,7 @@ $old = $old ?? [];
             <div class="col-12">
                 <label for="name" class="form-label">Nom</label>
                 <input type="text" id="name" name="name" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>"
-                    value="<?= View::e($old['name'] ?? '') ?>" aria-describedby="name-error" required>
+                    value="<?= View::e($old['name'] ?? '') ?>" aria-describedby="name-error" maxlength="255" required>
                 <?php if (isset($errors['name'])): ?>
                     <div id="name-error" class="invalid-feedback"><?= View::e($errors['name']) ?></div>
                 <?php endif; ?>
@@ -33,7 +33,7 @@ $old = $old ?? [];
 
             <div class="col-12">
                 <label for="description" class="form-label">Description</label>
-                <textarea id="description" name="description" class="form-control <?= isset($errors['description']) ? 'is-invalid' : '' ?>" rows="4" aria-describedby="description-error" required><?= View::e($old['description'] ?? '') ?></textarea>
+                <textarea id="description" name="description" class="form-control <?= isset($errors['description']) ? 'is-invalid' : '' ?>" rows="4" maxlength="5000" aria-describedby="description-error" required><?= View::e($old['description'] ?? '') ?></textarea>
                 <?php if (isset($errors['description'])): ?>
                     <div id="description-error" class="invalid-feedback"><?= View::e($errors['description']) ?></div>
                 <?php endif; ?>
@@ -93,7 +93,7 @@ $old = $old ?? [];
             <div class="col-md-6">
                 <label for="contact_name" class="form-label">Nom du contact</label>
                 <input type="text" id="contact_name" name="contact_name" class="form-control <?= isset($errors['contact_name']) ? 'is-invalid' : '' ?>"
-                    value="<?= View::e($old['contact_name'] ?? '') ?>" aria-describedby="contact-name-error" required>
+                    value="<?= View::e($old['contact_name'] ?? '') ?>" aria-describedby="contact-name-error" maxlength="255" required>
                 <?php if (isset($errors['contact_name'])): ?>
                     <div id="contact-name-error" class="invalid-feedback"><?= View::e($errors['contact_name']) ?></div>
                 <?php endif; ?>
@@ -102,7 +102,7 @@ $old = $old ?? [];
             <div class="col-md-6">
                 <label for="contact_email" class="form-label">Email du contact</label>
                 <input type="email" id="contact_email" name="contact_email" class="form-control <?= isset($errors['contact_email']) ? 'is-invalid' : '' ?>"
-                    value="<?= View::e($old['contact_email'] ?? '') ?>" aria-describedby="contact-email-error" required>
+                    value="<?= View::e($old['contact_email'] ?? '') ?>" aria-describedby="contact-email-error" maxlength="255" required>
                 <?php if (isset($errors['contact_email'])): ?>
                     <div id="contact-email-error" class="invalid-feedback"><?= View::e($errors['contact_email']) ?></div>
                 <?php endif; ?>

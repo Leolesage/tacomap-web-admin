@@ -178,7 +178,7 @@ final class TacosPlaceController
             Response::html($html, 422);
         }
 
-        View::setFlash('flash_success', 'TacosPlace mis à jour.');
+        View::setFlash('flash_success', 'TacosPlace modifie.');
         Response::redirect('/admin/tacos-places/' . $id);
     }
 
@@ -281,11 +281,53 @@ final class TacosPlaceController
         if (!empty($apiResponse['fields']) && is_array($apiResponse['fields'])) {
             $errors = [];
             foreach ($apiResponse['fields'] as $field => $code) {
-                $errors[(string)$field] = (string)$code;
+                $fieldName = (string)$field;
+                $errors[$fieldName] = $this->mapApiError($fieldName, (string)$code);
             }
             return $errors;
         }
         return ['form' => (string)($apiResponse['error'] ?? 'Erreur API')];
+    }
+
+    private function mapApiError(string $field, string $code): string
+    {
+        if ($code === 'required') {
+            return match ($field) {
+                'name' => 'Nom requis.',
+                'description' => 'Description requise.',
+                'date' => 'Date requise.',
+                'price' => 'Prix requis.',
+                'latitude' => 'Latitude requise.',
+                'longitude' => 'Longitude requise.',
+                'contact_name' => 'Nom du contact requis.',
+                'contact_email' => 'Email du contact requis.',
+                'photo' => 'Photo requise.',
+                default => 'Champ requis.',
+            };
+        }
+
+        if ($code === 'invalid') {
+            return match ($field) {
+                'date' => 'Date invalide.',
+                'price' => 'Prix invalide.',
+                'latitude' => 'Latitude invalide.',
+                'longitude' => 'Longitude invalide.',
+                'contact_email' => 'Email invalide.',
+                default => 'Valeur invalide.',
+            };
+        }
+
+        if ($code === 'max_length') {
+            return match ($field) {
+                'name' => 'Nom trop long (max 255 caracteres).',
+                'description' => 'Description trop longue (max 5000 caracteres).',
+                'contact_name' => 'Nom du contact trop long (max 255 caracteres).',
+                'contact_email' => 'Email trop long (max 255 caracteres).',
+                default => 'Texte trop long.',
+            };
+        }
+
+        return $code;
     }
 
     private function renderIndexPage(int $page, string $q, bool $isAdmin): void
